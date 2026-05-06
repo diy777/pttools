@@ -43,10 +43,14 @@ jobs:
           # base-image pip itself (e.g. CVE-2026-3219).
           uv pip install --upgrade pip
           uv pip install pip-audit
-      - name: Audit third-party dependencies only
+      - name: Export requirements
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          uv export --no-dev --no-editable --format requirements-txt --output-file requirements-audit.txt
+      - name: Audit exported requirements
         run: |
           source .venv/bin/activate
-          pip-audit --strict --requirement pyproject.toml
+          pip-audit --strict -r requirements-audit.txt
 
   gitleaks:
     runs-on: ubuntu-latest
