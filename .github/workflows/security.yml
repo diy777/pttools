@@ -46,7 +46,7 @@ jobs:
       - name: Export requirements
         run: |
           export PATH="$HOME/.local/bin:$PATH"
-          uv export --no-dev --no-editable --format requirements-txt --output-file requirements-audit.txt
+          uv export --no-dev --no-editable --no-emit-project --format requirements-txt --output-file requirements-audit.txt
       - name: Audit exported requirements
         run: |
           source .venv/bin/activate
