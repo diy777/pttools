@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="assets/transparentbanner.png" alt="pentest-tools" width="640">
-
 <h1>pentest-tools</h1>
 
 **A modular security automation toolkit for authorized testing, reporting, and workflow orchestration.**
