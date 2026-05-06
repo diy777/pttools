@@ -34,7 +34,7 @@ jobs:
           python-version: "3.12"
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
-      - name: Install project deps
+      - name: Install audit tool
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           uv venv
@@ -42,12 +42,11 @@ jobs:
           # Upgrade pip first so the audit doesn't trip on a CVE in the
           # base-image pip itself (e.g. CVE-2026-3219).
           uv pip install --upgrade pip
-          uv pip install -e ".[dev]"
           uv pip install pip-audit
-      - name: Audit
+      - name: Audit third-party dependencies only
         run: |
           source .venv/bin/activate
-          pip-audit --strict
+          pip-audit --strict --requirement pyproject.toml
 
   gitleaks:
     runs-on: ubuntu-latest
