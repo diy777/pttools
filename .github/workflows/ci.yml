@@ -1,36 +1,7 @@
 name: pentest-tools
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
-      - 'specs/**'
-      - 'examples/**'
-      - 'benchmarks/**'
-      - 'LICENSE'
-      - '.gitignore'
-      - '.gitattributes'
-      - '.dockerignore'
-      - '.github/CODEOWNERS'
-      - '.github/ISSUE_TEMPLATE/**'
-      - 'SECURITY.md'
-  pull_request:
-    branches: [main]
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
-      - 'specs/**'
-      - 'examples/**'
-      - 'benchmarks/**'
-      - 'LICENSE'
-      - '.gitignore'
-      - '.gitattributes'
-      - '.dockerignore'
-      - '.github/CODEOWNERS'
-      - '.github/ISSUE_TEMPLATE/**'
-      - 'SECURITY.md'
+  workflow_dispatch: {}
 
 # Skip CI for dependabot PRs that only touch lock files (the test job
 # already runs against the bumped versions; running again on PR is

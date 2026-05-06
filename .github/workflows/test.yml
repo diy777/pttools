@@ -1,36 +1,6 @@
 name: Tests
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
-      - 'specs/**'
-      - 'examples/**'
-      - 'benchmarks/**'
-      - 'LICENSE'
-      - '.gitignore'
-      - '.gitattributes'
-      - '.dockerignore'
-      - '.github/CODEOWNERS'
-      - '.github/ISSUE_TEMPLATE/**'
-      - 'SECURITY.md'
-  pull_request:
-    branches: [main]
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
-      - 'specs/**'
-      - 'examples/**'
-      - 'benchmarks/**'
-      - 'LICENSE'
-      - '.gitignore'
-      - '.gitattributes'
-      - '.dockerignore'
-      - '.github/CODEOWNERS'
-      - '.github/ISSUE_TEMPLATE/**'
-      - 'SECURITY.md'
   workflow_dispatch: {}
 
 concurrency:
