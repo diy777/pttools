@@ -1,0 +1,70 @@
+name: Bug report
+description: Report something that does not behave as documented
+title: "[bug] "
+labels: [bug]
+body:
+  - type: input
+    id: command
+    attributes:
+      label: Command that failed
+      description: The exact `pttools` or `pentest-tools` command, including flags
+      placeholder: e.g. pttools start https://example.com --auth-profile staging
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: pentest-tools version
+      description: Run `pttools --version` or `cat VERSION`
+      placeholder: e.g. 0.9.2
+    validations:
+      required: true
+
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      description: Run `python --version`
+      placeholder: e.g. Python 3.12.3
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: e.g. Ubuntu 24.04, macOS 14.4, WSL2
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Output, traceback, error messages. Use code blocks.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Smallest set of steps to reproduce. Test target if relevant (DVWA, juice-shop, etc.)
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Logs and config
+      description: Relevant evidence files, playbook YAML, config snippets. Redact secrets.
+      render: shell

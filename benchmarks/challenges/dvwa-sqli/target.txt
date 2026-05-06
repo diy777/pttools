@@ -1,0 +1,1 @@
+http://localhost:4280/vulnerabilities/sqli/?id=1&Submit=Submit

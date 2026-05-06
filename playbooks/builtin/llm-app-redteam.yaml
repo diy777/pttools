@@ -1,0 +1,37 @@
+name: llm-app-redteam
+description: Red-team an AI/LLM application endpoint against the OWASP LLM Top 10 corpus.
+version: 1.0.0
+authors: [pentest-tools]
+intensity: normal
+
+inputs:
+  target:
+    required: true
+    prompt: "LLM endpoint URL (e.g. https://api.example.com/v1/chat/completions)"
+  schema:
+    required: false
+    default: "openai"
+    prompt: "Request schema: openai | simple | custom"
+
+phases:
+  - id: surface-check
+    tools: [builtin_http_headers, builtin_ssl_check]
+
+  - id: llm-probe
+    depends_on: [surface-check]
+    tools: [llm_redteam]
+
+  - id: post-probe-web
+    depends_on: [llm-probe]
+    condition: "has_finding(category='llm_redteam')"
+    tools: [nuclei]
+    args:
+      nuclei: "-t http/exposures"
+
+  - id: wrap-up
+    depends_on: [llm-probe]
+    manual: true
+    checklist:
+      - Triage LLM findings against the target's published safety policy
+      - Share prompt transcripts with the product/ML team for remediation
+      - Decide whether a follow-up managed red-team engagement is warranted

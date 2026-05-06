@@ -1,0 +1,33 @@
+# Default to LF line endings on text files
+* text=auto eol=lf
+
+# Python and shell explicitly LF
+*.py text eol=lf
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Config and docs
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+
+# Web frontend (the dashboard / docs site)
+*.html text eol=lf
+*.css text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+
+# Binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.svg binary
+*.ico binary
+*.db binary
+*.whl binary

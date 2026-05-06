@@ -1,0 +1,16 @@
+# gitleaks config for pttools
+#
+# Tests for the secret-detection scanners deliberately contain fake credentials
+# (e.g., a fixture JWT that the scan_secrets_in_response test feeds into
+# the regex detector). These are not real secrets. Allowlist them so a
+# launch-blocking CI scan stays green.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures and scanner regex examples"
+paths = [
+  '''tests/.*\.py$''',
+  # Engine scanner regex patterns reference shapes of secrets but contain none.
+  '''engine/scanners\.py$''',
+]

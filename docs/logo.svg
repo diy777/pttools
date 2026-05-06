@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e94560"/>
+      <stop offset="100%" style="stop-color:#c73a52"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#e0e0e8"/>
+    </linearGradient>
+  </defs>
+  <!-- Shield shape -->
+  <path d="M64 8 L112 28 L112 68 C112 96 88 118 64 124 C40 118 16 96 16 68 L16 28 Z"
+        fill="url(#shieldGrad)" stroke="#ff5a78" stroke-width="2"/>
+  <!-- Inner shield highlight -->
+  <path d="M64 16 L104 32 L104 66 C104 90 84 110 64 116 C44 110 24 90 24 66 L24 32 Z"
+        fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- Terminal/cursor icon -->
+  <rect x="38" y="42" width="52" height="36" rx="6" fill="rgba(0,0,0,0.3)"/>
+  <!-- >_ prompt -->
+  <text x="46" y="67" font-family="monospace" font-size="22" font-weight="bold" fill="url(#textGrad)">
+    &gt;_
+  </text>
+  <!-- AI text -->
+  <text x="50" y="100" font-family="system-ui, sans-serif" font-size="18" font-weight="900" fill="white" text-anchor="middle" letter-spacing="2">
+    AI
+  </text>
+</svg>

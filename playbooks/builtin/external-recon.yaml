@@ -1,0 +1,36 @@
+name: external-recon
+description: Passive + active external footprint mapping for a domain or IP range.
+version: 1.0.0
+authors: [pentest-tools]
+intensity: stealth
+
+inputs:
+  target:
+    required: true
+    prompt: "Root domain or CIDR (e.g. example.com or 10.0.0.0/24)"
+
+phases:
+  - id: passive
+    tools: [builtin_dns_enum, builtin_whois, subfinder, amass]
+
+  - id: port-sweep
+    depends_on: [passive]
+    tools: [nmap, masscan]
+    args:
+      nmap: "-sS -Pn --top-ports 1000"
+      masscan: "--rate 1000 -p1-65535"
+
+  - id: service-fingerprint
+    depends_on: [port-sweep]
+    condition: "has_finding(category='recon')"
+    tools: [nmap, builtin_ssl_check, builtin_http_headers]
+    args:
+      nmap: "-sV -sC"
+
+  - id: wrap-up
+    depends_on: [service-fingerprint]
+    manual: true
+    checklist:
+      - Confirm all discovered hosts are in scope
+      - Flag interesting services for follow-up playbooks
+      - Export target list for the web or AD playbook

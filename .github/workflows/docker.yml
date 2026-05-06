@@ -1,0 +1,67 @@
+name: Build and push container image to ghcr.io
+
+# Triggered alongside the PyPI release: tag v*.*.* fires both this and release.yml.
+# Builds prod + dev images, pushes to ghcr.io/0xsteph/pentest-tools with the version tag and "latest".
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build (e.g. v0.10.3)"
+        required: true
+
+permissions:
+  contents: read
+  packages: write   # required to push to ghcr.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+
+      - name: Resolve tag
+        id: meta
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ github.event.inputs.tag }}"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          VERSION="${TAG#v}"
+          echo "tag=$TAG"           >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION"   >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435  # v3
+
+      - name: Log in to ghcr.io
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567  # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push prod image
+        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75  # v6
+        with:
+          context: .
+          target: prod
+          push: true
+          tags: |
+            ghcr.io/0xsteph/pentest-tools:${{ steps.meta.outputs.version }}
+            ghcr.io/0xsteph/pentest-tools:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/pentest-tools/pentest-tools
+            org.opencontainers.image.version=${{ steps.meta.outputs.version }}
+            org.opencontainers.image.licenses=MIT
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Smoke test the published image
+        run: |
+          docker pull ghcr.io/0xsteph/pentest-tools:${{ steps.meta.outputs.version }}
+          docker run --rm ghcr.io/0xsteph/pentest-tools:${{ steps.meta.outputs.version }} pttools --version

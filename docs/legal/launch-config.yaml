@@ -1,0 +1,114 @@
+# Launch configuration for the public legal documents.
+#
+# Edit this file once with your business decisions, then run:
+#
+#     python3 scripts/fill-legal.py
+#
+# The script rewrites every [FILL: ...] marker in docs/legal/*.md and
+# pushes the changes to docs/legal/. Re-run after any edit.
+#
+# Safe defaults are pre-filled where the choice is obvious for an OSS
+# SaaS in 2026 (analytics: plausible, dispute: arbitration via AAA,
+# cookie persistence: 12 months, etc.). The fields you MUST personalize
+# before publishing are marked "REQUIRED" in the comments.
+
+# ─── Identity (REQUIRED) ────────────────────────────────────────────────
+
+# The legal name as it appears on registration paperwork.
+# Soft-launch default: trade name only, with a note pointing to legal@
+# for verified entity details. Replace with the registered legal name
+# the moment you incorporate (e.g. "pentest-tools LLC", "pentest-tools, Inc.").
+entity_name: "pentest-tools"
+
+# Short legal-form descriptor used in narrative paragraphs.
+# Soft-launch default: explicit pre-incorporation note. Replace with
+# "a Wyoming limited liability company" (etc.) after formation.
+entity_form: "(legal entity formation in progress — write to legal@pentest-tools.local for verified entity name and registered office address)"
+
+# Postal address that appears in Privacy, Terms, AUP, and the legal-page footers.
+# Soft-launch default: routes correspondence through email until a
+# privacy-preserving postal address (registered agent or virtual mailbox)
+# is in place. GDPR Article 13 strictly prefers a postal address; this
+# state is acceptable for a pre-public-launch period only.
+mailing_address: |
+  Postal correspondence: write to legal@pentest-tools.local to request the
+  current registered address. We will publish a permanent postal address
+  here when the legal entity is finalized.
+
+# Registration number (state filing number, EIN, or company number).
+# Optional — leave the placeholder if you don't have one yet.
+registration_number: "[FILL: state filing number / EIN / company number, optional]"
+
+# ─── Effective dates ────────────────────────────────────────────────────
+
+effective_date: "2026-05-15"        # date the docs go live
+last_updated: "2026-05-15"          # change whenever you update them
+
+# ─── Governing law and disputes (defaults to Delaware + AAA arbitration) ─
+
+governing_law_jurisdiction: "the State of Delaware, USA, without regard to conflict-of-laws principles"
+
+# "A" = binding arbitration with class waiver (recommended for SaaS).
+# "B" = court venue.
+dispute_option: "A"
+
+# Used only when dispute_option = "A".
+arbitration_body: "AAA"             # or JAMS
+arbitration_rules: "Commercial"     # or Consumer
+arbitration_seat: "Wilmington, Delaware"
+
+# Used only when dispute_option = "B".
+court_county: "New Castle County"
+court_state: "Delaware"
+
+# ─── EU representative ──────────────────────────────────────────────────
+
+# Two ways to handle EU/UK/CH compliance without paying for a rep right now:
+#  - "geofence"       : block EU/UK/CH signups via the Cloudflare Worker
+#                       at saas-platform/functions/_middleware.ts.
+#                       The Privacy doc explicitly says we do not yet sell
+#                       to those jurisdictions.
+#  - any other string : treat as the appointed representative's name+address
+#                       (e.g. "Prighter Group, Schönbrunner Straße 297, 1120 Wien, Austria")
+eu_representative: "geofence"
+
+# ─── Vendors and subprocessors ──────────────────────────────────────────
+
+hosting_vendor: "Cloudflare Workers + D1"
+hosting_region: "global edge; primary US, EU region (eu-west) available on request for Enterprise"
+email_vendor: "Resend"
+email_region: "US"
+error_monitoring: "Sentry"          # or "none" if you don't run one
+
+# ─── SOC2 targets (aspirational; safe to publish even without contract) ─
+
+soc2_type_i_target: "Q4 2026"
+soc2_type_ii_target: "2027"
+
+# ─── Cookies and analytics ──────────────────────────────────────────────
+
+# "plausible" = privacy-respecting, no cookies, no consent banner needed
+# "ga4"       = Google Analytics 4 (cookies + consent banner required in EU/CA)
+# "none"      = no analytics at all
+analytics: "plausible"
+
+cookie_persistence: "12 months"
+
+# ─── Critical infrastructure reference (AUP) ────────────────────────────
+
+critical_infrastructure_ref: "CISA's 16 critical infrastructure sectors (United States)"
+
+# ─── Subprocessor notification ──────────────────────────────────────────
+
+subprocessor_notification: "in-app banner on the dashboard plus an email to the workspace owner"
+
+# ─── Security disclosure PGP key ────────────────────────────────────────
+#
+# The fill-in script substitutes both fields into RESPONSIBLE_DISCLOSURE.md.
+# The full ASCII-armored public key lives at the path below; the script
+# reads that file and pastes it inline so the markdown is self-contained.
+
+pgp_fingerprint: "742F E41A 69B6 5995 7390  BA89 2041 C71E 654B 47A4"
+pgp_key_expires: "2028-05-01"
+# Path is resolved relative to ~/pentest-tools-preview-v4/ in the build script.
+pgp_public_key_path: "/.well-known/pgp-key.txt"

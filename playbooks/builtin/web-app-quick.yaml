@@ -1,0 +1,37 @@
+name: web-app-quick
+description: Fast external sweep of a web application (recon + vuln scan + optional LLM probe).
+version: 1.0.0
+authors: [pentest-tools]
+intensity: normal
+
+inputs:
+  target:
+    required: true
+    prompt: "Target URL (e.g. https://app.example.com)"
+
+phases:
+  - id: recon
+    tools: [nmap, builtin_http_headers, builtin_dns_enum, builtin_ssl_check]
+    args:
+      nmap: "-sV --top-ports 200"
+
+  - id: content-discovery
+    depends_on: [recon]
+    tools: [ffuf, gobuster]
+
+  - id: vuln-scan
+    depends_on: [recon]
+    tools: [nuclei, nikto]
+
+  - id: llm-probe
+    depends_on: [recon]
+    condition: "has_finding(category='web') or has_finding(category='recon')"
+    tools: [llm_redteam]
+
+  - id: wrap-up
+    depends_on: [vuln-scan]
+    manual: true
+    checklist:
+      - Review high/critical findings with the engagement owner
+      - Confirm scope boundaries before running validation steps
+      - Export report via `pttools report <engagement-id>`

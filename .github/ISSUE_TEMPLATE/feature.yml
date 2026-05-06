@@ -1,0 +1,45 @@
+name: Feature request
+description: Propose a new capability, tool integration, or playbook
+title: "[feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What pentesting workflow is currently painful or missing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - New specialized agent
+        - New tool wrapper (e.g. integrate X into engine/scanners.py)
+        - New playbook
+        - New CLI command or flag
+        - MCP server feature
+        - Engine improvement (orchestrator, scope, evidence, etc.)
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This is for authorized security testing
+          required: true
+        - label: This is not a destructive feature as a primary purpose
+          required: true

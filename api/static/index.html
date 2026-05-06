@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pentest-tools · dashboard</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">pentest<span class="dash">-</span>ai</span>
+      <span class="badge" id="version-badge">v?</span>
+    </div>
+    <nav class="topnav">
+      <a href="#engagements" class="nav-active" data-tab="engagements">Engagements</a>
+      <a href="#agents" data-tab="agents">Agents</a>
+      <a href="#tools" data-tab="tools">Tools</a>
+    </nav>
+    <div class="topright">
+      <span class="health-dot" id="health-dot" aria-hidden="true"></span>
+      <span class="health-label" id="health-label">connecting…</span>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Engagements tab -->
+    <section class="panel" id="tab-engagements">
+      <div class="panel-head">
+        <h2>Engagements</h2>
+        <div class="panel-actions">
+          <span class="hint" id="engagement-count" aria-live="polite">—</span>
+          <button class="btn ghost" id="btn-refresh" title="Refresh list">refresh</button>
+        </div>
+      </div>
+
+      <div class="layout">
+        <aside class="engagement-list" id="engagement-list" aria-label="Engagement list">
+          <div class="empty-state" id="engagement-empty">
+            <p>No engagements yet.</p>
+            <p class="hint">Run <code>pttools start &lt;target&gt;</code> in another terminal.</p>
+          </div>
+        </aside>
+
+        <article class="engagement-detail" id="engagement-detail" aria-live="polite">
+          <div class="empty-state center">
+            <p>Select an engagement to view findings, chains, and agent timeline.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Agents tab -->
+    <section class="panel hidden" id="tab-agents">
+      <div class="panel-head">
+        <h2>Specialist agents</h2>
+        <span class="hint" id="agent-count">—</span>
+      </div>
+      <div class="grid" id="agent-grid"></div>
+    </section>
+
+    <!-- Tools tab -->
+    <section class="panel hidden" id="tab-tools">
+      <div class="panel-head">
+        <h2>Tool registry</h2>
+        <span class="hint" id="tool-count">—</span>
+      </div>
+      <div class="grid" id="tool-grid"></div>
+    </section>
+  </main>
+
+  <!-- Finding detail modal -->
+  <div class="modal-backdrop hidden" id="finding-modal" role="dialog" aria-modal="true" aria-labelledby="finding-modal-title">
+    <div class="modal">
+      <header class="modal-head">
+        <h3 id="finding-modal-title">Finding</h3>
+        <button class="btn ghost" id="finding-modal-close" aria-label="Close">close</button>
+      </header>
+      <div class="modal-body" id="finding-modal-body"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>pentest-tools dashboard · localhost</span>
+    <span><a href="https://github.com/pentest-tools/pentest-tools" rel="noopener">github</a> · <a href="https://pentest-tools.local" rel="noopener">site</a></span>
+  </footer>
+
+  <script src="dashboard.js" defer></script>
+</body>
+</html>

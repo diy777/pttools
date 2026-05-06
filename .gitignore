@@ -1,0 +1,65 @@
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+.venv/
+*.egg
+
+# Database
+pentest_findings.db
+*.db
+*.db-journal
+
+# Reports
+reports/
+
+# Environment & Secrets
+.env
+.env.local
+.env.production
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Node
+node_modules/
+
+# Build
+dist/
+build/
+.venv-build/
+.coverage
+
+# SaaS platform (lives in pentestai-private)
+saas-platform/
+functions/
+
+# Cloudflare
+.wrangler/
+
+# Runtime databases
+dvwa_engagement.db
+dvwa_full_engagement.db
+
+# Evidence output
+evidence/
+
+# Generated HTML
+dashboard.html

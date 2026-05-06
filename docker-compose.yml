@@ -1,0 +1,79 @@
+# pentest-tools docker-compose
+#
+# Profiles:
+#   default   — pull a built image and run `pttools mcp` for use as an MCP server
+#   dev       — local source mount, hot-reload, runs the API + dashboard
+#   menu      — interactive numeric launcher (hackingtool-style)
+#   serve     — HTTP REST API on :8888 with the dashboard at /dashboard/
+#
+# Usage:
+#   docker compose up                              # default: MCP server
+#   docker compose --profile dev up                # dev: local mount + hot reload
+#   docker compose --profile menu run --rm menu    # interactive launcher
+#   docker compose --profile serve up              # API + dashboard
+
+services:
+
+  # ─── default: MCP server (stdio) ─────────────────────────────────────
+  pentest-tools:
+    image: ghcr.io/0xsteph/pentest-tools:latest
+    container_name: pentest-tools
+    stdin_open: true
+    tty: true
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - PENTEST_TOOLS_LLM_PROVIDER=${PENTEST_TOOLS_LLM_PROVIDER:-anthropic}
+    volumes:
+      - ./engagements:/data/engagements
+    command: ["pttools", "mcp"]
+    profiles: [""]
+
+  # ─── dev: local source mount, hot reload ─────────────────────────────
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: pentest-tools-dev
+    stdin_open: true
+    tty: true
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - PENTEST_TOOLS_DB_PATH=/data/pentest_findings.db
+    volumes:
+      - .:/workspace:rw
+      - ./engagements:/data/engagements
+      - venv:/workspace/.venv  # named volume so host venv doesn't leak in
+    working_dir: /workspace
+    command: ["bash"]
+    profiles: ["dev"]
+
+  # ─── menu: interactive launcher ──────────────────────────────────────
+  menu:
+    image: ghcr.io/0xsteph/pentest-tools:latest
+    container_name: pentest-tools-menu
+    stdin_open: true
+    tty: true
+    command: ["pttools", "menu"]
+    profiles: ["menu"]
+
+  # ─── serve: HTTP REST API + dashboard ────────────────────────────────
+  serve:
+    image: ghcr.io/0xsteph/pentest-tools:latest
+    container_name: pentest-tools-serve
+    ports:
+      - "8888:8888"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - PENTEST_TOOLS_API_TOKEN=${PENTEST_TOOLS_API_TOKEN:-}
+      - PENTEST_TOOLS_DB_PATH=/data/pentest_findings.db
+    volumes:
+      - ./engagements:/data/engagements
+    command: ["pttools", "serve", "--host", "0.0.0.0", "--port", "8888"]
+    profiles: ["serve"]
+
+volumes:
+  venv:

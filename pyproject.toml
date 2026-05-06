@@ -1,0 +1,156 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pentest-tools"
+version = "0.1.0"
+description = "Pentest Tools is an extensible security automation toolkit for authorized testing, reporting, and workflow orchestration"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "pentest-tools"}
+]
+keywords = ["pentest", "security", "automation", "mcp", "reporting", "testing", "vulnerability"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Software Development :: Testing",
+]
+
+dependencies = [
+    "fastmcp>=2.0",
+    "httpx>=0.27",
+    "pydantic>=2.0",
+    "rich>=13.0",
+    "typer>=0.9",
+    "aiosqlite>=0.20",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+    "jinja2>=3.1",
+    "cryptography>=42.0",
+    "dnspython>=2.6",
+    "scapy>=2.5",
+    "paramiko>=3.4",
+    "impacket>=0.11",
+    "bloodhound>=1.7",
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "aiohttp>=3.9",
+    "tenacity>=8.2",
+    "structlog>=24.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=4.1",
+    "ruff>=0.3",
+    "mypy>=1.8",
+    "pre-commit>=3.6",
+    "types-PyYAML>=6.0",
+]
+cloud = [
+    "boto3>=1.34",
+    "azure-identity>=1.15",
+    "azure-mgmt-resource>=23.0",
+    "google-cloud-storage>=2.14",
+]
+litellm = [
+    # Universal LLM adapter (300+ providers: OpenRouter, Azure, DeepSeek,
+    # Groq, Mistral, Together AI, Bedrock, Vertex AI, Cohere, etc.).
+    # Optional so the core install stays lean.
+    "litellm>=1.50",
+]
+api = [
+    # FastAPI HTTP REST surface (alternative to MCP server, for non-MCP clients
+    # and the future web dashboard).
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "websockets>=13.0",
+]
+menu = [
+    # Interactive numeric menu CLI for users without Claude Code.
+    "questionary>=2.0",
+]
+browser = [
+    # Headless browser automation for the BrowserAgent. Chromium-only by default;
+    # Playwright pulls in the binary on `playwright install chromium`.
+    "playwright>=1.45",
+]
+tracing = [
+    # OpenTelemetry SDK + OTLP gRPC exporter. Sends spans to any OTLP-compatible
+    # backend (Phoenix, Jaeger, Tempo, Datadog, Honeycomb).
+    "opentelemetry-api>=1.27",
+    "opentelemetry-sdk>=1.27",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.27",
+]
+all = [
+    "pentest-tools[litellm,api,menu,browser,tracing,cloud]",
+]
+
+[project.urls]
+Homepage = "https://github.com/pentest-tools/pentest-tools"
+Repository = "https://github.com/pentest-tools/pentest-tools"
+Documentation = "https://github.com/pentest-tools/pentest-tools#readme"
+Issues = "https://github.com/pentest-tools/pentest-tools/issues"
+
+[project.scripts]
+pentest-tools = "cli.main:app"
+pttools = "cli.main:app"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["mcp_server*", "agents*", "tools*", "engine*", "cli*", "config*", "playbooks*"]
+
+[tool.setuptools.package-data]
+"agents.report" = ["templates/*.j2", "templates/*.html"]
+"agents.llm_redteam" = ["*.yaml", "*.yml"]
+"playbooks" = ["**/*.yaml", "**/*.yml"]
+"config" = ["*.yaml", "*.yml"]
+"tools" = ["wordlists/*.txt"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 160
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# Typer uses function calls (Option/Argument) as argument defaults; that's the canonical pattern.
+# B904: re-raising user-facing typer.Exit doesn't need exception chaining (it's not a real chain).
+"cli/main.py" = ["B008", "B904"]
+# Tests use PascalCase for Mock/Sentinel fixture names by convention (mirrors stdlib unittest.mock).
+"tests/*.py" = ["N806"]
+# api/server.py unpacks FastAPI/Depends/Query/etc class names from a tuple inside a function.
+# They're class names, not variables — the N806 lowercase-naming rule is wrong here.
+# B008: FastAPI Depends() / Header() are also call-as-default patterns like Typer's.
+"api/server.py" = ["N806", "B008"]
+# fill-legal.py contains literal [FILL: ...] match strings copied verbatim
+# from the legal markdown. Some are unavoidably long; wrapping the
+# Python string would break the str.replace() match.
+"scripts/fill-legal.py" = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+warn_return_any = false
+warn_unused_configs = true
+ignore_missing_imports = true
+disable_error_code = ["assignment", "union-attr", "no-untyped-def", "var-annotated", "type-arg", "no-any-return", "arg-type", "import-untyped"]
